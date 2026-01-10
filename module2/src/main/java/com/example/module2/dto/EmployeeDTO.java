@@ -1,8 +1,13 @@
 package com.example.module2.dto;
 
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDate;
 
+@Getter
+@Setter
 public class EmployeeDTO {
     private Long id;
     private String name;

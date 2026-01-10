@@ -3,6 +3,7 @@ package com.example.module2.controllers;
 import com.example.module2.dto.EmployeeDTO;
 import com.example.module2.entities.EmployeeEntity;
 import com.example.module2.repository.EmployeeRepository;
+import com.example.module2.service.EmployeeService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,24 +11,23 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/employees")
 public class EmployeeController {
-    public final EmployeeRepository employeeRepository;
-
-    public EmployeeController(EmployeeRepository employeeRepository) {
-        this.employeeRepository = employeeRepository;
+    private final EmployeeService employeeService;
+    public EmployeeController( EmployeeService employeeService) {
+        this.employeeService = employeeService;
     }
 
     @GetMapping(path = "/{employeeId}")
-    public EmployeeEntity getEmployeeById(@PathVariable(name="employeeId") long id){
-        return employeeRepository.findById(id).orElse(null);
+    public EmployeeDTO getEmployeeById(@PathVariable(name="employeeId") long id){
+        return employeeService.getEmployeeById(id);
     }
 
     @GetMapping
-    public List<EmployeeEntity> getAllEmployee(){
-        return employeeRepository.findAll();
+    public List<EmployeeDTO> getAllEmployee(){
+        return employeeService.getAllEmployee();
     }
 
-    @PostMapping EmployeeEntity createNewEmployee(@RequestBody EmployeeEntity inputEmployee){
-        return employeeRepository.save(inputEmployee);
+    @PostMapping EmployeeDTO createNewEmployee(@RequestBody EmployeeEntity inputEmployee){
+        return employeeService.createNewEmployee(inputEmployee);
     }
 
     @PutMapping String updateEmployeeId(){
