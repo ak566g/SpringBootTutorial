@@ -39,8 +39,9 @@ public class EmployeeService {
       return  employeeRepository.findById(id).map(employeeEntity -> modelMapper.map(employeeEntity, EmployeeDTO.class));
     }
 
-    public EmployeeDTO createNewEmployee(EmployeeEntity inputEmployee) {
-        EmployeeEntity employeeEntity = employeeRepository.save(inputEmployee);
+    public EmployeeDTO createNewEmployee(EmployeeDTO inputEmployee) {
+        EmployeeEntity inputEmployeeEntity = modelMapper.map(inputEmployee, EmployeeEntity.class);
+        EmployeeEntity employeeEntity = employeeRepository.save(inputEmployeeEntity);
         return modelMapper.map(employeeEntity, EmployeeDTO.class);
     }
 
