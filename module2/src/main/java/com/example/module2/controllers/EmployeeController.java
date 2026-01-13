@@ -1,6 +1,8 @@
 package com.example.module2.controllers;
 
+import com.example.module2.annotations.EmployeeRoleValidation;
 import com.example.module2.dto.EmployeeDTO;
+import com.example.module2.exceptions.ResourceNotFoundException;
 import com.example.module2.service.EmployeeService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
@@ -22,7 +25,7 @@ public class EmployeeController {
     @GetMapping(path = "/{employeeId}")
     public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable(name="employeeId") long id){
         Optional<EmployeeDTO>employeeDTO = employeeService.getEmployeeById(id);
-        return  employeeDTO.map(employeeDTO1 -> ResponseEntity.ok(employeeDTO1)).orElse(ResponseEntity.notFound().build());
+        return  employeeDTO.map(employeeDTO1 -> ResponseEntity.ok(employeeDTO1)).orElseThrow(()->new ResourceNotFoundException("Employee not found with id: "+id));
     }
 
     @GetMapping
@@ -37,7 +40,7 @@ public class EmployeeController {
     }
 
     @PutMapping(path = "/{employeeId}")
-    public ResponseEntity<EmployeeDTO> updateEmployeeById(@RequestBody EmployeeDTO employeeDTO, @PathVariable Long employeeId){
+    public ResponseEntity<EmployeeDTO> updateEmployeeById(@RequestBody @Valid EmployeeDTO employeeDTO, @PathVariable Long employeeId){
         EmployeeDTO employeeDTO1 = employeeService.updateEmployeeById(employeeId, employeeDTO);
         if(employeeDTO1 == null){
             ResponseEntity.notFound().build();
